@@ -1,10 +1,3 @@
-//
-//  InfoViewController.swift
-//  Navigation
-//
-//  Created by Alan on 13.12.2022.
-//
-
 import UIKit
 
 class InfoViewController: UIViewController {
@@ -21,14 +14,12 @@ class InfoViewController: UIViewController {
     }()
 
     //MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBlue
         setupButton()
-
-        // Do any additional setup after loading the view.
     }
-
     
     private func setupButton() {
         view.addSubview(button)
@@ -43,25 +34,11 @@ class InfoViewController: UIViewController {
     }
     @objc private func buttonAction() {
         let alertController = UIAlertController(title: "Ваша ставка", message: "All in", preferredStyle: .alert)
-        let seconndAlertAction = UIAlertAction(title: "На красное", style: .cancel)
-        let firstAlertAction = UIAlertAction(title: "На черное", style: .default)
+        let seconndAlertAction = UIAlertAction(title: "На красное", style: .cancel, handler: {(alert: UIAlertAction!) in print("You win!")})
+        let firstAlertAction = UIAlertAction(title: "На черное", style: .default, handler: {(alert: UIAlertAction!) in print("Loser!")})
         alertController.addAction(firstAlertAction)
         alertController.addAction(seconndAlertAction)
         present(alertController, animated: true, completion: nil)
     }
-
-
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 

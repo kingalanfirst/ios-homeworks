@@ -11,7 +11,6 @@ class FeedViewController: UIViewController {
     
     var post = Post(title: "Мой пост")
 
-    
     private lazy var button: UIButton = {
         let button = UIButton()
         button.backgroundColor = .white
@@ -32,8 +31,8 @@ class FeedViewController: UIViewController {
             button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             button.heightAnchor.constraint(equalToConstant: 50)
         ])
-
     }
+    
     @objc private func buttonAction() {
         let postViewController = PostViewController()
         postViewController.titlePost = post.title
@@ -45,19 +44,5 @@ class FeedViewController: UIViewController {
         setupButton()
         buttonAction()
         view.backgroundColor = .systemBlue
-        
-        // Do any additional setup after loading the view.
-    }
-    
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
+    }    
 }
