@@ -2,9 +2,7 @@
 import UIKit
 
 class ProfileHeaderView: UIView {
-    
-    var frames = CGRectZero
-    
+        
     private lazy var profileImageView: UIImageView = {
         let profileImageView = UIImageView()
         profileImageView.image = UIImage(named: "gorilla.png")
@@ -38,8 +36,8 @@ class ProfileHeaderView: UIView {
         profileStatusLabel.textAlignment = .center
         profileStatusLabel.sizeToFit()
         return profileStatusLabel
-        
     }()
+    
     private lazy var showStatusButton: UIButton = {
         let showStatusButton = UIButton()
         showStatusButton.backgroundColor = .systemBlue
@@ -48,29 +46,52 @@ class ProfileHeaderView: UIView {
         showStatusButton.layer.shadowOpacity = 0.7
         showStatusButton.layer.shadowRadius = 4
         showStatusButton.layer.shadowColor = UIColor.black.cgColor
-        showStatusButton.setTitle("Show status", for: .normal)
+        showStatusButton.setTitle("Set status", for: .normal)
         showStatusButton.setTitleColor(.white, for: .normal)
         showStatusButton.titleLabel?.font = showStatusButton.titleLabel?.font.withSize(14)
-        showStatusButton.frame = CGRect(x: 16, y: profileImageView.frame.height + 32,
+        showStatusButton.frame = CGRect(x: 16, y: profileImageView.frame.height + 72,
                                         width: UIScreen.main.bounds.width - 32, height: 50)
         showStatusButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         return showStatusButton
+    }()
+        
+    private lazy var setStatusTextField: UITextField = {
+        let setStatusTextField = UITextField()
+        setStatusTextField.backgroundColor = .white
+        setStatusTextField.layer.cornerRadius = 12
+        setStatusTextField.font = setStatusTextField.font?.withSize(15)
+        setStatusTextField.textColor = .black
+        setStatusTextField.layer.borderWidth = 1
+        setStatusTextField.layer.borderColor = UIColor.black.cgColor
+        setStatusTextField.frame = CGRect(x: 180, y: 160, width: UIScreen.main.bounds.width - 198, height: 40)
+        setStatusTextField.addTarget(self, action: #selector(statusTextChanged), for: .editingChanged)
+        return setStatusTextField
+    }()
+        
+    private lazy var statusText: String = {
+        return statusText
     }()
     
     private func setupView() {
         addSubview(profileImageView)
         addSubview(profileNameLabel)
         addSubview(profileStatusLabel)
+        addSubview(setStatusTextField)
         addSubview(showStatusButton)
     }
     
+    @objc private func statusTextChanged(_ textField: UITextField) {
+        statusText = setStatusTextField.text!
+    }
+    
     @objc private func buttonAction() {
-        guard let statusText = profileStatusLabel.text else {
-            print("\(profileNameLabel.text!) has no status")
+        guard setStatusTextField.text != nil else {
+            print("Text the status before press the button")
             return
         }
-        print(statusText)
+        profileStatusLabel.text = statusText
     }
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
