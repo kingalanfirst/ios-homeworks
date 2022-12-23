@@ -33,9 +33,9 @@ class InfoViewController: UIViewController {
 
     }
     @objc private func buttonAction() {
-        let alertController = UIAlertController(title: "Ваша ставка", message: "All in", preferredStyle: .alert)
-        let seconndAlertAction = UIAlertAction(title: "На красное", style: .cancel, handler: {(alert: UIAlertAction!) in print("You win!")})
-        let firstAlertAction = UIAlertAction(title: "На черное", style: .default, handler: {(alert: UIAlertAction!) in print("Loser!")})
+        let alertController = UIAlertController(title: "Choose the pill", message: "Mr. Anderson", preferredStyle: .alert)
+        let seconndAlertAction = UIAlertAction(title: "Red one", style: .cancel, handler: {(alert: UIAlertAction!) in print("Reality")})
+        let firstAlertAction = UIAlertAction(title: "Blue one", style: .default, handler: {(alert: UIAlertAction!) in print("Matrix")})
         alertController.addAction(firstAlertAction)
         alertController.addAction(seconndAlertAction)
         present(alertController, animated: true, completion: nil)

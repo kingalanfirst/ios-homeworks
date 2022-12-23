@@ -11,6 +11,7 @@ class ProfileHeaderView: UIView {
         profileImageView.clipsToBounds = true
         profileImageView.layer.borderWidth = 3
         profileImageView.layer.borderColor = UIColor.white.cgColor
+        profileImageView.translatesAutoresizingMaskIntoConstraints = false
         return profileImageView
     }()
     
@@ -19,84 +20,113 @@ class ProfileHeaderView: UIView {
         profileNameLabel.text = "@KillaGorilla"
         profileNameLabel.font = profileNameLabel.font.withSize(18)
         profileNameLabel.font = UIFont.boldSystemFont(ofSize: 18)
+//        profileNameLabel.backgroundColor = .white
         profileNameLabel.textColor = .black
-        profileNameLabel.frame = CGRect(x: 100, y: 27, width: 300, height: 30)
-        profileNameLabel.textAlignment = .center
+        profileNameLabel.textAlignment = .left
+        profileNameLabel.translatesAutoresizingMaskIntoConstraints = false
         return profileNameLabel
     }()
     
     private lazy var profileStatusLabel: UILabel = {
         let profileStatusLabel = UILabel()
         profileStatusLabel.numberOfLines = 0
-        //        profileStatusLabel.lineBreakMode = .byWordWrapping
         profileStatusLabel.text = "Looking for a big, young, good looking, able to cook female gorilla"
+//        profileStatusLabel.backgroundColor = .systemBrown
         profileStatusLabel.textColor = .gray
         profileStatusLabel.font = profileNameLabel.font.withSize(14)
-        profileStatusLabel.frame = CGRect(x: 180, y: 100, width: UIScreen.main.bounds.width - 198, height: 30)
-        profileStatusLabel.textAlignment = .center
+        profileStatusLabel.textAlignment = .left
         profileStatusLabel.sizeToFit()
+        profileStatusLabel.translatesAutoresizingMaskIntoConstraints = false
         return profileStatusLabel
     }()
     
-    private lazy var showStatusButton: UIButton = {
-        let showStatusButton = UIButton()
-        showStatusButton.backgroundColor = .systemBlue
-        showStatusButton.layer.cornerRadius = 4
-        showStatusButton.layer.shadowOffset = CGSize(width: 4, height: 4)
-        showStatusButton.layer.shadowOpacity = 0.7
-        showStatusButton.layer.shadowRadius = 4
-        showStatusButton.layer.shadowColor = UIColor.black.cgColor
-        showStatusButton.setTitle("Set status", for: .normal)
-        showStatusButton.setTitleColor(.white, for: .normal)
-        showStatusButton.titleLabel?.font = showStatusButton.titleLabel?.font.withSize(14)
-        showStatusButton.frame = CGRect(x: 16, y: profileImageView.frame.height + 72,
-                                        width: UIScreen.main.bounds.width - 32, height: 50)
-        showStatusButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        return showStatusButton
+    private lazy var statusTextField: UITextField = {
+        let statusTextField = UITextField()
+        statusTextField.backgroundColor = .white
+        statusTextField.layer.cornerRadius = 12
+        statusTextField.font = statusTextField.font?.withSize(15)
+        statusTextField.textColor = .black
+        statusTextField.layer.borderWidth = 1
+        statusTextField.layer.borderColor = UIColor.black.cgColor
+        statusTextField.addTarget(self, action: #selector(statusTextChanged), for: .editingChanged)
+        statusTextField.translatesAutoresizingMaskIntoConstraints = false
+        return statusTextField
     }()
-        
-    private lazy var setStatusTextField: UITextField = {
-        let setStatusTextField = UITextField()
-        setStatusTextField.backgroundColor = .white
-        setStatusTextField.layer.cornerRadius = 12
-        setStatusTextField.font = setStatusTextField.font?.withSize(15)
-        setStatusTextField.textColor = .black
-        setStatusTextField.layer.borderWidth = 1
-        setStatusTextField.layer.borderColor = UIColor.black.cgColor
-        setStatusTextField.frame = CGRect(x: 180, y: 160, width: UIScreen.main.bounds.width - 198, height: 40)
-        setStatusTextField.addTarget(self, action: #selector(statusTextChanged), for: .editingChanged)
-        return setStatusTextField
+
+    private lazy var setStatusButton: UIButton = {
+        let setStatusButton = UIButton()
+        setStatusButton.backgroundColor = .systemBlue
+        setStatusButton.layer.cornerRadius = 4
+        setStatusButton.layer.shadowOffset = CGSize(width: 4, height: 4)
+        setStatusButton.layer.shadowOpacity = 0.7
+        setStatusButton.layer.shadowRadius = 4
+        setStatusButton.layer.shadowColor = UIColor.black.cgColor
+        setStatusButton.setTitle("Set status", for: .normal)
+        setStatusButton.setTitleColor(.white, for: .normal)
+        setStatusButton.titleLabel?.font = setStatusButton.titleLabel?.font.withSize(14)
+        setStatusButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+        setStatusButton.translatesAutoresizingMaskIntoConstraints = false
+        return setStatusButton
     }()
         
     private lazy var statusText: String = {
         return statusText
     }()
-    
+        
     private func setupView() {
         addSubview(profileImageView)
         addSubview(profileNameLabel)
         addSubview(profileStatusLabel)
-        addSubview(setStatusTextField)
-        addSubview(showStatusButton)
+        addSubview(statusTextField)
+        addSubview(setStatusButton)
+    }
+    
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            profileImageView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            profileImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            profileImageView.widthAnchor.constraint(equalToConstant: 150),
+            profileImageView.heightAnchor.constraint(equalToConstant: 150),
+            
+            profileNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 27),
+            profileNameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 20),
+            profileNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            
+            profileStatusLabel.topAnchor.constraint(equalTo: profileNameLabel.bottomAnchor, constant: 10),
+            profileStatusLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 20),
+            profileStatusLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            profileStatusLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 16),
+            
+            statusTextField.topAnchor.constraint(equalTo: profileStatusLabel.bottomAnchor, constant: 10),
+            statusTextField.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 20),
+            statusTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            statusTextField.heightAnchor.constraint(equalToConstant: 40),
+            
+            setStatusButton.topAnchor.constraint(equalTo: statusTextField.bottomAnchor, constant: 16),
+            setStatusButton.topAnchor.constraint(greaterThanOrEqualTo: profileImageView.bottomAnchor, constant: 16),
+            setStatusButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            setStatusButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            setStatusButton.heightAnchor.constraint(equalToConstant: 50),
+        ])
     }
     
     @objc private func statusTextChanged(_ textField: UITextField) {
-        statusText = setStatusTextField.text!
+        statusText = statusTextField.text!
     }
     
     @objc private func buttonAction() {
-        guard setStatusTextField.text != nil else {
+        guard statusTextField.text != nil else {
             print("Text the status before press the button")
             return
         }
         profileStatusLabel.text = statusText
     }
     
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .lightGray
         setupView()
+        setupConstraints()
     }
     
     required init?(coder: NSCoder) {
