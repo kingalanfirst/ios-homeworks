@@ -1,9 +1,3 @@
-//
-//  SceneDelegate.swift
-//  Navigation
-//
-//  Created by Alan on 03.12.2022.
-//
 
 import UIKit
 
@@ -18,17 +12,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         return UINavigationController(rootViewController: feedViewController)
     }
     
-    func createProfileViewController() -> UINavigationController {
-        let profileViewController = ProfileViewController()
-        profileViewController.title = "Profile"
-        profileViewController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.fill"), tag: 1)
-        return UINavigationController(rootViewController: profileViewController)
+    func createlogInViewController() -> UINavigationController {
+        let logInViewController = LogInViewController()
+//        logInViewController.title = "Profile"
+        logInViewController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.fill"), tag: 1)
+        return UINavigationController(rootViewController: logInViewController)
     }
     
     func createTabBarController() -> UITabBarController {
         let tabBarController = UITabBarController()
         UITabBar.appearance().backgroundColor = .systemGray6
-        tabBarController.viewControllers = [createFeedViewController(), createProfileViewController()]
+        tabBarController.viewControllers = [createFeedViewController(), createlogInViewController()]
         return tabBarController
     }
 
@@ -55,4 +49,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidEnterBackground(_ scene: UIScene) {
     }
 }
-

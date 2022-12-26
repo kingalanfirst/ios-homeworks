@@ -1,9 +1,3 @@
-//
-//  AppDelegate.swift
-//  Navigation
-//
-//  Created by Alan on 03.12.2022.
-//
 
 import UIKit
 
