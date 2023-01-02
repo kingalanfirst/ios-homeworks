@@ -83,6 +83,7 @@ class ProfileHeaderView: UIView {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
+            
             profileImageView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
             profileImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             profileImageView.widthAnchor.constraint(equalToConstant: 150),
@@ -104,9 +105,11 @@ class ProfileHeaderView: UIView {
             
             setStatusButton.topAnchor.constraint(equalTo: statusTextField.bottomAnchor, constant: 16),
             setStatusButton.topAnchor.constraint(greaterThanOrEqualTo: profileImageView.bottomAnchor, constant: 16),
+            setStatusButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
             setStatusButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             setStatusButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             setStatusButton.heightAnchor.constraint(equalToConstant: 50),
+            
         ])
     }
     

@@ -149,7 +149,6 @@ class LogInViewController: UIViewController {
         view.endEditing(true)
     }
 
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white

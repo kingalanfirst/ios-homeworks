@@ -3,7 +3,7 @@ import UIKit
 
 class FeedViewController: UIViewController {
     
-    var post = Post(title: "My post")
+    var post = PostFeed(title: "My post")
     
     private lazy var verticalStackView: UIStackView = {
         var verticalStackView = UIStackView()

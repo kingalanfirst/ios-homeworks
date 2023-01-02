@@ -3,43 +3,84 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
-    var profileHeaderView = ProfileHeaderView()
+    let postList = [robberyPost, eatingPost, elephantPost, camelPost]
+    var profileTableView = UITableView()
+    let myCustomHeader = MyCustomHeader()
     
-    private lazy var newButton: UIButton = {
-        let newButton = UIButton()
-        newButton.backgroundColor = .systemBlue
-        newButton.layer.cornerRadius = 4
-        newButton.layer.shadowOffset = CGSize(width: 4, height: 4)
-        newButton.layer.shadowOpacity = 0.7
-        newButton.layer.shadowRadius = 4
-        newButton.layer.shadowColor = UIColor.black.cgColor
-        newButton.setTitle("New button", for: .normal)
-        newButton.setTitleColor(.white, for: .normal)
-        newButton.titleLabel?.font = newButton.titleLabel?.font.withSize(14)
-        newButton.translatesAutoresizingMaskIntoConstraints = false
-        return newButton
-    }()
-
+    let headerID = "headerId"
+    let cellID = "cellId"
+        
+    func setupTableView() {
+        profileTableView.contentInsetAdjustmentBehavior = .never
+        profileTableView.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.cellID)
+//        profileTableView.register(UINib(nibName: "PostTableViewCell", bundle: nil), forCellReuseIdentifier: PostTableViewCell.cellID)
+        profileTableView.delegate = self
+        profileTableView.dataSource = self
+        profileTableView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(profileTableView)
+    }
+    
+    func setupMyCustomHeader() {
+        profileTableView.register(MyCustomHeader.self, forHeaderFooterViewReuseIdentifier: headerID)
+    }
+    
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            profileHeaderView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            profileHeaderView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            profileHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            profileHeaderView.heightAnchor.constraint(greaterThanOrEqualToConstant: 220), // что-то маловато 220
-            
-            newButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            newButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-            newButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
-            newButton.heightAnchor.constraint(equalToConstant: 50),
+            profileTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            profileTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            profileTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            profileTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemGray6
-        profileHeaderView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(profileHeaderView)
-        view.addSubview(newButton)
+        setupTableView()
+        setupMyCustomHeader()
         setConstraints()
+    }
+}
+
+extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    // MARK: - Table view data source
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return postList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.cellID, for: indexPath) as! PostTableViewCell
+        let post = postList[indexPath.row]
+//        var content = cell.defaultContentConfiguration()
+        cell.titleLabel?.text = post.title
+        cell.newsImageView?.image = UIImage(named: post.image)
+        cell.descriptionLabel?.text = post.description
+        cell.likesCountLabel?.text = "Likes: \(post.likes)"
+        cell.viewsCountLabel?.text = "Views: \(post.views)"
+        return cell
+    }
+
+    // MARK: - Table view delegate
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if #available(iOS 15, *) {
+            tableView.sectionHeaderTopPadding = 0
+        }
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerID) as! MyCustomHeader
+        return header
     }
 }
