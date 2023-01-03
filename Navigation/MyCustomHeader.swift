@@ -21,7 +21,6 @@ class MyCustomHeader: UITableViewHeaderFooterView {
     }
     
     private func configureContents() {
-        contentView.backgroundColor = .cyan
         contentView.addSubview(profileHeaderView)
         profileHeaderView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
