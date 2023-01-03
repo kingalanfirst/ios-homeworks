@@ -13,9 +13,9 @@ class ProfileViewController: UIViewController {
     func setupTableView() {
         profileTableView.contentInsetAdjustmentBehavior = .never
         profileTableView.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.cellID)
-//        profileTableView.register(UINib(nibName: "PostTableViewCell", bundle: nil), forCellReuseIdentifier: PostTableViewCell.cellID)
         profileTableView.delegate = self
         profileTableView.dataSource = self
+//        profileTableView.rowHeight = UITableView.automaticDimension
         profileTableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(profileTableView)
     }
@@ -58,18 +58,22 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.cellID, for: indexPath) as! PostTableViewCell
         let post = postList[indexPath.row]
 //        var content = cell.defaultContentConfiguration()
-        cell.titleLabel?.text = post.title
-        cell.newsImageView?.image = UIImage(named: post.image)
-        cell.descriptionLabel?.text = post.description
-        cell.likesCountLabel?.text = "Likes: \(post.likes)"
-        cell.viewsCountLabel?.text = "Views: \(post.views)"
+        cell.titleLabel.text = "\(post.author). \(post.title)"
+        cell.newsImageView.image = UIImage(named: post.image)
+        cell.descriptionLabel.text = post.description
+        cell.likesCountLabel.text = "Likes: \(post.likes)"
+        cell.viewsCountLabel.text = "Views: \(post.views)"
+//        cell.backgroundColor = .cyan
         return cell
     }
 
     // MARK: - Table view delegate
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 730
+//        return UITableView.automaticDimension
         return UITableView.automaticDimension
+
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

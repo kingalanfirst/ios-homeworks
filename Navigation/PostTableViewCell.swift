@@ -5,7 +5,7 @@ class PostTableViewCell: UITableViewCell {
     
     static let cellID = "cellId"
     
-    weak var titleLabel: UILabel? = {
+    lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = String()
         label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
@@ -15,15 +15,15 @@ class PostTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    weak var newsImageView: UIImageView? = {
+    lazy var newsImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage()
         imageView.backgroundColor = .black
-        imageView.contentMode = .center
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-    weak var descriptionLabel: UILabel? = {
+    lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.text = String()
         label.font = UIFont.systemFont (ofSize: 14, weight: .regular)
@@ -33,7 +33,7 @@ class PostTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    weak var likesCountLabel: UILabel? = {
+    lazy var likesCountLabel: UILabel = {
         let label = UILabel()
         label.text = String()
         label.font = UIFont.systemFont (ofSize: 16, weight: .regular)
@@ -42,7 +42,7 @@ class PostTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    weak var viewsCountLabel: UILabel? = {
+    lazy var viewsCountLabel: UILabel = {
         let label = UILabel()
         label.text = String()
         label.font = UIFont.systemFont (ofSize: 16, weight: .regular)
@@ -52,60 +52,55 @@ class PostTableViewCell: UITableViewCell {
         return label
     }()
     func setupViews() {
-        contentView.addSubview(titleLabel!)
-        contentView.addSubview(newsImageView!)
-        contentView.addSubview(descriptionLabel!)
-        contentView.addSubview(likesCountLabel!)
-        contentView.addSubview(viewsCountLabel!)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(newsImageView)
+        contentView.addSubview(descriptionLabel)
+        contentView.addSubview(likesCountLabel)
+        contentView.addSubview(viewsCountLabel)
     }
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            titleLabel!.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            titleLabel!.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            titleLabel!.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
-            newsImageView!.topAnchor.constraint(equalTo: titleLabel!.bottomAnchor, constant: 16),
-            newsImageView!.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            newsImageView!.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            newsImageView!.heightAnchor.constraint(equalTo: contentView.widthAnchor),
-            newsImageView!.widthAnchor.constraint(equalTo: contentView.widthAnchor),
+            newsImageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
+            newsImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            newsImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            newsImageView.heightAnchor.constraint(equalTo: contentView.widthAnchor),
+            newsImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor),
 
-            descriptionLabel!.topAnchor.constraint(equalTo: newsImageView!.bottomAnchor, constant: 16),
-            descriptionLabel!.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            descriptionLabel!.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            descriptionLabel.topAnchor.constraint(equalTo: newsImageView.bottomAnchor, constant: 16),
+            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
 
-            likesCountLabel!.topAnchor.constraint(equalTo: descriptionLabel!.bottomAnchor, constant: 16),
-            likesCountLabel!.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            likesCountLabel!.trailingAnchor.constraint(equalTo: contentView.centerXAnchor),
+            likesCountLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
+            likesCountLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            likesCountLabel.trailingAnchor.constraint(equalTo: contentView.centerXAnchor),
 
-            viewsCountLabel!.topAnchor.constraint(equalTo: descriptionLabel!.bottomAnchor, constant: 16),
-            viewsCountLabel!.leadingAnchor.constraint(equalTo: contentView.centerXAnchor),
-            viewsCountLabel!.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            viewsCountLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
+            viewsCountLabel.leadingAnchor.constraint(equalTo: contentView.centerXAnchor),
+            viewsCountLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            
+            contentView.bottomAnchor.constraint(equalTo: likesCountLabel.bottomAnchor, constant: 16)
         ])
     }
-//    label.text = "\(post.author). \(post.title)"
-
-//    private func addPostViewsToArray() -> [UIView] {
-//        let postView: UIView = UIView()
-//        var postViewsArray: [UIView] = []
-//
-//        for post in postArray {
-//            postView.addSubview(titleLabel)
-//            postView.addSubview(newsImageView)
-//            postView.addSubview(textLabel)
-//            postView.addSubview(likesCountLabel)
-//            postView.addSubview(viewsCountLabel)
-//            postViewsArray.append(postView)
-//
-//        }
-//        return postViewsArray
-//    }
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        selectionStyle = UITableViewCell.SelectionStyle.none
+        setupViews()
+        setupConstraints()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        setupViews()
-        setupConstraints()
         // Initialization code
     }
 
