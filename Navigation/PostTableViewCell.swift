@@ -51,6 +51,7 @@ class PostTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
     func setupViews() {
         contentView.addSubview(titleLabel)
         contentView.addSubview(newsImageView)
@@ -58,6 +59,7 @@ class PostTableViewCell: UITableViewCell {
         contentView.addSubview(likesCountLabel)
         contentView.addSubview(viewsCountLabel)
     }
+    
     func setupConstraints() {
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),

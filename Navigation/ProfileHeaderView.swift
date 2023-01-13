@@ -3,7 +3,7 @@ import UIKit
 
 class ProfileHeaderView: UIView {
         
-    private lazy var profileImageView: UIImageView = {
+    lazy var profileImageView: UIImageView = {
         let profileImageView = UIImageView()
         profileImageView.image = UIImage(named: "gorilla.png")
         profileImageView.frame = CGRect(x: 16, y: 16, width: 150, height: 150)
@@ -11,7 +11,7 @@ class ProfileHeaderView: UIView {
         profileImageView.clipsToBounds = true
         profileImageView.layer.borderWidth = 3
         profileImageView.layer.borderColor = UIColor.white.cgColor
-        profileImageView.translatesAutoresizingMaskIntoConstraints = false
+//        profileImageView.translatesAutoresizingMaskIntoConstraints = false
         return profileImageView
     }()
     
@@ -84,10 +84,10 @@ class ProfileHeaderView: UIView {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             
-            profileImageView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            profileImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            profileImageView.widthAnchor.constraint(equalToConstant: 150),
-            profileImageView.heightAnchor.constraint(equalToConstant: 150),
+//            profileImageView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+//            profileImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+//            profileImageView.widthAnchor.constraint(equalToConstant: 150),
+//            profileImageView.heightAnchor.constraint(equalToConstant: 150),
             
             profileNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 27),
             profileNameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 20),
