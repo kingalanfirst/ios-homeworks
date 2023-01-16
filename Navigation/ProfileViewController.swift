@@ -10,7 +10,6 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let headerID = "headerId"
     let headerID2 = "headerId2"
-
     let cellID = "cellId"
     let collectionCellID = "collectionCellId"
     
@@ -66,11 +65,11 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
         backgroundView.addSubview(closeButton)
         view.addSubview(backgroundView)
     }
-    func animateAppearCloseButton() {
+    func animateCloseButtonAppear() {
         closeButton.imageView?.isHidden = false
         closeButton.tintColor = .white
     }
-    func animateDisappearCloseButton() {
+    func animateCloseButtonDisappear() {
         closeButton.tintColor = .clear
     }
     func animateProfileImageOpening() {
@@ -92,7 +91,6 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
                                  width: backgroundView.bounds.width,
                                  height: backgroundView.bounds.width)
         imageView.layer.cornerRadius = 0
-        
         imageView.frame = CGRect(x: 16, y: 16, width: 150, height: 150)
         imageView.layer.cornerRadius = imageView.frame.height/2
         imageView.clipsToBounds = true
@@ -115,7 +113,7 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
                        delay: 0.5,
                        options: .curveEaseIn,
                        animations: {
-            self.animateAppearCloseButton()
+            self.animateCloseButtonAppear()
         },
                        completion: { finished in
         })
@@ -127,7 +125,7 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
                        options: .curveEaseIn,
                        animations: { [weak self] in
             guard let self = self else { return }
-            self.animateDisappearCloseButton()
+            self.animateCloseButtonDisappear()
         },
                        completion: { finished in
             self.closeButton.imageView?.isHidden = true
@@ -197,10 +195,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     // MARK: - Table view delegate
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 730
-//        return UITableView.automaticDimension
         return UITableView.automaticDimension
-
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -238,27 +233,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             let photosViewController = PhotosViewController()
-    //        tableView.isUserInteractionEnabled = false
             navigationController?.pushViewController(photosViewController, animated: true)
         }
     }
-    
-//    func tableView( _ tableView : UITableView,  titleForHeaderInSection section: Int) -> String? {
-//        if section == 1 {
-//            let title = "Hot news"
-//            return title
-//        } else {
-//            return ""
-//        }
-//    }
 }
-
-//extension ProfileViewController: UICollectionViewDelegateFlowLayout {
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        if indexPath.section == 0 {
-//            let photosViewController = PhotosViewController()
-//            navigationController?.pushViewController(photosViewController, animated: true)
-//        }
-//    }
-//}
-
