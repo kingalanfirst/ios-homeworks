@@ -7,11 +7,6 @@ class PhotosTableViewCell: UITableViewCell {
 
     let tableViewCellPhotos = photos.prefix(20)
         
-//    private enum LayoutConstant {
-//        static let spacing8: CGFloat = 8.0
-//        static let spacing12: CGFloat = 12.0
-//    }
-    
     let collectionViewLayout = UICollectionViewFlowLayout()
 
     lazy var photosCollectionView: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)

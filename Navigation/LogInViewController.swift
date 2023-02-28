@@ -2,7 +2,19 @@
 import UIKit
 
 class LogInViewController: UIViewController {
-            
+    
+    private lazy var topConstraint: NSLayoutConstraint = {
+        var constraint = NSLayoutConstraint()
+        constraint = shortPasswordLable.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 0)
+        return constraint
+    }()
+    
+    private lazy var heightConstraint: NSLayoutConstraint = {
+        var constraint = NSLayoutConstraint()
+        constraint = shortPasswordLable.heightAnchor.constraint(equalToConstant: 0)
+        return constraint
+    }()
+
     private lazy var logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "logo.png")
@@ -50,6 +62,20 @@ class LogInViewController: UIViewController {
         textField.leftViewMode = UITextField.ViewMode.always
         return textField
     }()
+    
+    // MARK: - diploma work
+    private lazy var shortPasswordLable: UILabel = {
+        let lable = UILabel()
+        lable.backgroundColor = .white
+        lable.font = UIFont.systemFont(ofSize: 16)
+        lable.text = "Password must be at least 8 characters"
+        lable.textColor = .red
+        lable.textAlignment = .center
+        lable.isHidden = true
+        lable.translatesAutoresizingMaskIntoConstraints = false
+        return lable
+    }()
+    //
 
     private lazy var logInButton: UIButton = {
         let button = UIButton()
@@ -57,7 +83,6 @@ class LogInViewController: UIViewController {
         button.layer.cornerRadius = 10
         button.setTitle("Log In", for: .normal)
         button.setTitleColor(.white, for: .normal)
-//        logInButton.titleLabel?.font = logInButton.titleLabel?.font.withSize(14)
         button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -66,12 +91,43 @@ class LogInViewController: UIViewController {
     let scrollView = UIScrollView()
     let contentView = UIView()
     
-    @objc private func buttonAction() {
-        let profileViewController = ProfileViewController()
-//        present(profileViewController, animated: true, completion: nil)
-        navigationController?.pushViewController(profileViewController, animated: true)
-
+    // MARK: - diploma work
+    private func emptyFieldAnimation(for textField: UITextField) {
+        UIView.animate(withDuration: 0.2,
+                       delay: 0,
+                       options: .autoreverse,
+                       animations: {
+            textField.backgroundColor = UIColor.red.withAlphaComponent(0.3)
+        }, completion: nil)
     }
+    
+    @objc private func buttonAction() {
+        if passwordTextField.text!.count < 8 && passwordTextField.text!.count > 0 {
+            makeAppearShortPasswordLable()
+        } else if passwordTextField.text!.count >= 8 {
+            if usersArray.contains(where: {$0.login.isEmpty == false && $0.password.isEmpty == false}) {
+//            if usersArray.contains(where: {$0.login == userIDTextField.text && $0.password == passwordTextField.text}) {
+                let profileViewController = ProfileViewController()
+                navigationController?.pushViewController(profileViewController, animated: true)
+            } else {
+                let alertController = UIAlertController(title: "Login Failed", message: "Your email or password is incorrect. Please try again", preferredStyle: .alert)
+                let okAlertAction = UIAlertAction(title: "OK", style: .default, handler: {(alert: UIAlertAction!) in })
+                alertController.addAction(okAlertAction)
+                present(alertController, animated: true, completion: nil)
+                cancelAnimation()
+            }
+        }
+        guard userIDTextField.text?.count != 0 else {
+            return emptyFieldAnimation(for: userIDTextField)
+        }
+        userIDTextField.backgroundColor = .systemGray6
+
+        guard passwordTextField.text?.count != 0 else {
+            return emptyFieldAnimation(for: passwordTextField)
+        }
+        passwordTextField.backgroundColor = .systemGray6
+    }
+    //
     
     private func setupScrollView(){
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -83,6 +139,7 @@ class LogInViewController: UIViewController {
         contentView.addSubview(logoImageView)
         contentView.addSubview(userIDTextField)
         contentView.addSubview(passwordTextField)
+        contentView.addSubview(shortPasswordLable)
         contentView.addSubview(logInButton)
         scrollView.addSubview(contentView)
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(hideKeyboard)))
@@ -116,13 +173,45 @@ class LogInViewController: UIViewController {
             passwordTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             passwordTextField.heightAnchor.constraint(equalToConstant: 50),
             
-            logInButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 16),
+            // MARK: - diploma work
+            topConstraint,
+            shortPasswordLable.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            shortPasswordLable.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            heightConstraint,
+            //
+            
+            logInButton.topAnchor.constraint(equalTo: shortPasswordLable.bottomAnchor, constant: 16),
             logInButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             logInButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             logInButton.heightAnchor.constraint(equalToConstant: 50),
         ])
     }
     
+    // MARK: - diploma work
+    private func cancelAnimation() {
+        shortPasswordLable.isHidden = true
+        topConstraint.constant = 0
+        heightConstraint.constant = 0
+        
+        userIDTextField.backgroundColor = .systemGray6
+        passwordTextField.backgroundColor = .systemGray6
+    }
+    
+    private func makeAppearShortPasswordLable() {
+        contentView.layoutIfNeeded()
+        shortPasswordLable.isHidden = false
+        topConstraint.constant = 16
+        heightConstraint.constant = 20
+
+        UIView.animate(withDuration: 0.2,
+                       delay: 0,
+                       options: .curveEaseIn,
+                       animations: {
+            self.contentView.layoutIfNeeded()
+        }, completion: nil)
+    }
+    //
+
     func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_ :)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -136,12 +225,10 @@ class LogInViewController: UIViewController {
     @objc func keyboardWillShow(_ notification: Notification) {
         let keyboardFrameSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let x = keyboardFrameSize.height - (scrollView.frame.maxY - logInButton.frame.maxY)
-//        scrollView.frame.origin.y = scrollView.frame.origin.y - keyboardFrameSize.height
         scrollView.contentOffset = CGPoint(x: 0, y: x)
     }
     
     @objc func keyboardWillHide() {
-//        scrollView.frame.origin.y = 0
         scrollView.contentOffset = CGPoint.zero
     }
 
@@ -157,21 +244,16 @@ class LogInViewController: UIViewController {
         setupContentView()
         setupConstraints()
         registerForKeyboardNotifications()
-        // Do any additional setup after loading the view.
     }
+    
+    // MARK: - diploma work
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        cancelAnimation()
+    }
+    //
     
     deinit {
         removeKeyboardNotifications()
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

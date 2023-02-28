@@ -1,8 +1,19 @@
 
 import UIKit
 
+protocol ProfileHeaderViewDelegate: AnyObject {
+    func profileHeaderViewDidTap(_ profileHeaderView: ProfileHeaderView)
+}
+
 class ProfileHeaderView: UIView {
-        
+    weak var delegate: ProfileHeaderViewDelegate?
+    
+    private lazy var profileStatusLabelConstraint: NSLayoutConstraint = {
+        var constraint = NSLayoutConstraint()
+        constraint = profileStatusLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 49)
+        return constraint
+    }()
+            
     lazy var profileImageView: UIImageView = {
         let profileImageView = UIImageView()
         profileImageView.image = UIImage(named: "gorilla.png")
@@ -14,24 +25,22 @@ class ProfileHeaderView: UIView {
 //        profileImageView.translatesAutoresizingMaskIntoConstraints = false
         return profileImageView
     }()
-    
+        
     private lazy var profileNameLabel: UILabel = {
         let profileNameLabel = UILabel()
         profileNameLabel.text = "@KillaGorilla"
         profileNameLabel.font = profileNameLabel.font.withSize(18)
         profileNameLabel.font = UIFont.boldSystemFont(ofSize: 18)
-//        profileNameLabel.backgroundColor = .white
         profileNameLabel.textColor = .black
         profileNameLabel.textAlignment = .left
         profileNameLabel.translatesAutoresizingMaskIntoConstraints = false
         return profileNameLabel
     }()
     
-    private lazy var profileStatusLabel: UILabel = {
+    lazy var profileStatusLabel: UILabel = {
         let profileStatusLabel = UILabel()
         profileStatusLabel.numberOfLines = 0
         profileStatusLabel.text = "Looking for a big, young, good looking, able to cook female gorilla"
-//        profileStatusLabel.backgroundColor = .systemBrown
         profileStatusLabel.textColor = .gray
         profileStatusLabel.font = profileNameLabel.font.withSize(14)
         profileStatusLabel.textAlignment = .left
@@ -40,16 +49,20 @@ class ProfileHeaderView: UIView {
         return profileStatusLabel
     }()
     
-    private lazy var statusTextField: UITextField = {
+    lazy var statusTextField: UITextField = {
         let statusTextField = UITextField()
         statusTextField.backgroundColor = .white
+        statusTextField.placeholder = "Text your status"
         statusTextField.layer.cornerRadius = 12
         statusTextField.font = statusTextField.font?.withSize(15)
         statusTextField.textColor = .black
         statusTextField.layer.borderWidth = 1
         statusTextField.layer.borderColor = UIColor.black.cgColor
-        statusTextField.addTarget(self, action: #selector(statusTextChanged), for: .editingChanged)
+        statusTextField.addTarget(self, action: #selector(statusTextFieldChanged), for: .editingChanged)
         statusTextField.translatesAutoresizingMaskIntoConstraints = false
+        let paddingView = UIView(frame: CGRectMake(0, 0, 8, statusTextField.frame.height))
+        statusTextField.leftView = paddingView
+        statusTextField.leftViewMode = UITextField.ViewMode.always
         return statusTextField
     }()
 
@@ -72,7 +85,7 @@ class ProfileHeaderView: UIView {
     private lazy var statusText: String = {
         return statusText
     }()
-        
+            
     private func setupView() {
         addSubview(profileImageView)
         addSubview(profileNameLabel)
@@ -84,19 +97,15 @@ class ProfileHeaderView: UIView {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             
-//            profileImageView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-//            profileImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-//            profileImageView.widthAnchor.constraint(equalToConstant: 150),
-//            profileImageView.heightAnchor.constraint(equalToConstant: 150),
-            
             profileNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 27),
             profileNameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 20),
             profileNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            profileNameLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
             
             profileStatusLabel.topAnchor.constraint(equalTo: profileNameLabel.bottomAnchor, constant: 10),
             profileStatusLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 20),
             profileStatusLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            profileStatusLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 16),
+            profileStatusLabelConstraint,
             
             statusTextField.topAnchor.constraint(equalTo: profileStatusLabel.bottomAnchor, constant: 10),
             statusTextField.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 20),
@@ -104,25 +113,39 @@ class ProfileHeaderView: UIView {
             statusTextField.heightAnchor.constraint(equalToConstant: 40),
             
             setStatusButton.topAnchor.constraint(equalTo: statusTextField.bottomAnchor, constant: 16),
-            setStatusButton.topAnchor.constraint(greaterThanOrEqualTo: profileImageView.bottomAnchor, constant: 16),
-            setStatusButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
             setStatusButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             setStatusButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             setStatusButton.heightAnchor.constraint(equalToConstant: 50),
-            
+            bottomAnchor.constraint(equalTo: setStatusButton.bottomAnchor, constant: 16),
         ])
     }
-    
-    @objc private func statusTextChanged(_ textField: UITextField) {
+        
+    @objc private func statusTextFieldChanged(_ textField: UITextField) {
         statusText = statusTextField.text!
     }
     
+    // MARK: - diploma work
+    private func emptyFieldAnimation1(for textField: UITextField) {
+        UIView.animate(withDuration: 0.2,
+                       delay: 0,
+                       options: .autoreverse,
+                       animations: {
+            textField.placeholder = "Error. Empty text field"
+            textField.backgroundColor = UIColor.red.withAlphaComponent(0.3)
+        }, completion: nil)
+    }
+    //
+
     @objc private func buttonAction() {
-        guard statusTextField.text != nil else {
-            print("Text the status before press the button")
-            return
+        // MARK: - diploma work
+        guard statusTextField.text?.count != 0 else {
+            return emptyFieldAnimation1(for: statusTextField)
         }
-        profileStatusLabel.text = statusText
+        statusTextField.backgroundColor = .white
+        statusTextField.placeholder = "Text your status"
+        delegate?.profileHeaderViewDidTap(self)
+        //
+        profileStatusLabel.text = statusText        
     }
     
     override init(frame: CGRect) {

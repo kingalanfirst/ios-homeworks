@@ -13,8 +13,6 @@ class InfoViewController: UIViewController {
         button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         return button
     }()
-
-    //MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,8 +29,8 @@ class InfoViewController: UIViewController {
             button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             button.heightAnchor.constraint(equalToConstant: 50)
         ])
-
     }
+    
     @objc private func buttonAction() {
         let alertController = UIAlertController(title: "Choose the pill", message: "Mr. Anderson", preferredStyle: .alert)
         let seconndAlertAction = UIAlertAction(title: "Red one", style: .cancel, handler: {(alert: UIAlertAction!) in print("Reality")})

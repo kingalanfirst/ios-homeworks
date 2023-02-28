@@ -1,10 +1,6 @@
 
 import UIKit
 
-//protocol ReusableView: AnyObject {
-//    static var identifier: String { get }
-//}
-
 class TableCollectionViewCell: UICollectionViewCell {
     
     lazy var photoImageView: UIImageView = {

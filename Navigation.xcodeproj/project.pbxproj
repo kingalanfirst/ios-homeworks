@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A11E1B02977E69A00DC7F30 /* LoginAndPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A11E1AF2977E69A00DC7F30 /* LoginAndPassword.swift */; };
+		3A11E1B229A1664300DC7F30 /* NewsPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A11E1B129A1664300DC7F30 /* NewsPostViewController.swift */; };
 		3A1C8B812949B13D009DF108 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1C8B802949B13D009DF108 /* FeedViewController.swift */; };
 		3A1C8B852949B1C7009DF108 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1C8B842949B1C7009DF108 /* PostViewController.swift */; };
 		3A1C8B872949B208009DF108 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1C8B862949B208009DF108 /* Post.swift */; };
@@ -30,6 +32,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3A11E1AF2977E69A00DC7F30 /* LoginAndPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAndPassword.swift; sourceTree = "<group>"; };
+		3A11E1B129A1664300DC7F30 /* NewsPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsPostViewController.swift; sourceTree = "<group>"; };
 		3A1C8B802949B13D009DF108 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		3A1C8B842949B1C7009DF108 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		3A1C8B862949B208009DF108 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
@@ -76,6 +80,7 @@
 				3A642741296A3B9A00D75CFE /* TableCollectionViewCell.swift */,
 				3A6427352962D5D900D75CFE /* PostTableViewCell.swift */,
 				3A6427392964D30500D75CFE /* PhotosTableViewCell.swift */,
+				3A11E1B129A1664300DC7F30 /* NewsPostViewController.swift */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -129,6 +134,7 @@
 				3A64273F2965F61800D75CFE /* Photo.swift */,
 				3A1C8B862949B208009DF108 /* Post.swift */,
 				3A6427372962F5A600D75CFE /* PostFeed.swift */,
+				3A11E1AF2977E69A00DC7F30 /* LoginAndPassword.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -214,7 +220,9 @@
 				3A1C8B872949B208009DF108 /* Post.swift in Sources */,
 				3A64273A2964D30500D75CFE /* PhotosTableViewCell.swift in Sources */,
 				3A64273C2964EF3C00D75CFE /* PhotosViewController.swift in Sources */,
+				3A11E1B02977E69A00DC7F30 /* LoginAndPassword.swift in Sources */,
 				3A6427402965F61800D75CFE /* Photo.swift in Sources */,
+				3A11E1B229A1664300DC7F30 /* NewsPostViewController.swift in Sources */,
 				3A1C8B9C295048FB009DF108 /* ProfileViewController.swift in Sources */,
 				3A1C8B892949B259009DF108 /* InfoViewController.swift in Sources */,
 				3A2A6BDA293BC85A006FC62C /* SceneDelegate.swift in Sources */,

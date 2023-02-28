@@ -16,10 +16,9 @@ class PostTableViewCell: UITableViewCell {
         return label
     }()
     lazy var newsImageView: UIImageView = {
-        let imageView = UIImageView()
+        let imageView = ScaleAspectFitImageView()
         imageView.image = UIImage()
         imageView.backgroundColor = .black
-        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -55,10 +54,12 @@ class PostTableViewCell: UITableViewCell {
     func setupViews() {
         contentView.addSubview(titleLabel)
         contentView.addSubview(newsImageView)
-        contentView.addSubview(descriptionLabel)
+//        contentView.addSubview(descriptionLabel)
         contentView.addSubview(likesCountLabel)
         contentView.addSubview(viewsCountLabel)
     }
+    
+//    var contraint: NSLayoutConstraint?
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -69,18 +70,17 @@ class PostTableViewCell: UITableViewCell {
             newsImageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
             newsImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             newsImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            newsImageView.heightAnchor.constraint(equalTo: contentView.widthAnchor),
             newsImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor),
 
-            descriptionLabel.topAnchor.constraint(equalTo: newsImageView.bottomAnchor, constant: 16),
-            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+//            descriptionLabel.topAnchor.constraint(equalTo: newsImageView.bottomAnchor, constant: 16),
+//            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+//            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
 
-            likesCountLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
+            likesCountLabel.topAnchor.constraint(equalTo: newsImageView.bottomAnchor, constant: 16), // was descriptionLabel
             likesCountLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             likesCountLabel.trailingAnchor.constraint(equalTo: contentView.centerXAnchor),
 
-            viewsCountLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
+            viewsCountLabel.topAnchor.constraint(equalTo: newsImageView.bottomAnchor, constant: 16), // was descriptionLabel
             viewsCountLabel.leadingAnchor.constraint(equalTo: contentView.centerXAnchor),
             viewsCountLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
@@ -100,7 +100,6 @@ class PostTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -112,4 +111,64 @@ class PostTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+}
+
+public class ScaleAspectFitImageView : UIImageView {
+    // constraint to maintain same aspect ratio as the image
+    private var aspectRatioConstraint:NSLayoutConstraint? = nil
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder:aDecoder)
+        self.setup()
+    }
+    
+    public override init(frame:CGRect) {
+        super.init(frame:frame)
+        self.setup()
+    }
+    
+    public override init(image: UIImage!) {
+        super.init(image:image)
+        self.setup()
+    }
+    
+    public override init(image: UIImage!, highlightedImage: UIImage?) {
+        super.init(image:image,highlightedImage:highlightedImage)
+        self.setup()
+    }
+    
+    override public var image: UIImage? {
+        didSet {
+            self.updateAspectRatioConstraint()
+        }
+    }
+    
+    private func setup() {
+        self.contentMode = .scaleAspectFit
+        self.updateAspectRatioConstraint()
+    }
+    
+//    Removes any pre-existing aspect ratio constraint, and adds a new one based on the current image
+    private func updateAspectRatioConstraint() {
+//         remove any existing aspect ratio constraint
+        if let c = self.aspectRatioConstraint {
+            self.removeConstraint(c)
+        }
+        self.aspectRatioConstraint = nil
+        
+        if let imageSize = image?.size, imageSize.height != 0
+        {
+            let aspectRatio = imageSize.width / imageSize.height
+            let rationConstraint = NSLayoutConstraint(item: self, attribute: .width,
+                                                      relatedBy: .equal,
+                                                      toItem: self,
+                                                      attribute: .height,
+                                                      multiplier: aspectRatio,
+                                                      constant: 0)
+            // a priority above fitting size level and below low
+            //        rationConstraint.priority = (UILayoutPriorityDefaultLow + UILayoutPriorityFittingSizeLevel) / 2.0
+            self.addConstraint(rationConstraint)
+            self.aspectRatioConstraint = rationConstraint
+        }
+    }
 }

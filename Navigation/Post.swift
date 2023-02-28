@@ -50,3 +50,5 @@ Like all good pageant contestants, Nazaa'a displayed not only dazzling beauty bu
                        image: "camel.png",
                        likes: 355,
                        views: 1234)
+
+var postList = [robberyPost, eatingPost, elephantPost, camelPost]

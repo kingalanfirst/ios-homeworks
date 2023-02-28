@@ -1,19 +1,18 @@
 
 import UIKit
 
+
 class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
     
-    let postList = [robberyPost, eatingPost, elephantPost, camelPost]
+    var myCustomHeader = MyCustomHeader()
 
     var profileTableView = UITableView()
-    let myCustomHeader = MyCustomHeader()
     
     let headerID = "headerId"
     let headerID2 = "headerId2"
     let cellID = "cellId"
     let collectionCellID = "collectionCellId"
     
-    // MARK: - new homework
     lazy var backgroundView: UIView = {
         let bcgrndView = UIView()
         bcgrndView.frame = view.safeAreaLayoutGuide.layoutFrame
@@ -32,7 +31,6 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
         button.addTarget(self, action: #selector(profileImageViewClosed), for: .touchUpInside)
         return button
     }()
-    //
         
     func setupTableView() {
         profileTableView.contentInsetAdjustmentBehavior = .never
@@ -40,7 +38,6 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
         profileTableView.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.cellID)
         profileTableView.delegate = self
         profileTableView.dataSource = self
-//        profileTableView.rowHeight = UITableView.automaticDimension
         profileTableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(profileTableView)
     }
@@ -50,7 +47,7 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
         profileTableView.register(OneMoreCustomHeader.self, forHeaderFooterViewReuseIdentifier: headerID2)
     }
     
-    private func setConstraints() {
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             profileTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             profileTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
@@ -58,9 +55,7 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
             profileTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
     }
-    
-    // MARK: - new homework
-    
+        
     func setupBackgroundView() {
         backgroundView.addSubview(closeButton)
         view.addSubview(backgroundView)
@@ -101,7 +96,7 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
     @objc func profileImageViewClicked(_ sender: UITapGestureRecognizer) {
         setupBackgroundView()
                 
-        UIView.animate(withDuration: 0.5,
+        UIView.animate(withDuration: 0.3,
                        delay: 0,
                        options: .curveEaseIn,
                        animations: {
@@ -110,7 +105,7 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
                        completion: { finished in
         })
         UIView.animate(withDuration: 0.3,
-                       delay: 0.5,
+                       delay: 0.3,
                        options: .curveEaseIn,
                        animations: {
             self.animateCloseButtonAppear()
@@ -120,7 +115,7 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     @objc func profileImageViewClosed() {
-        UIView.animate(withDuration: 0.3,
+        UIView.animate(withDuration: 0.1,
                        delay: 0,
                        options: .curveEaseIn,
                        animations: { [weak self] in
@@ -130,8 +125,8 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
                        completion: { finished in
             self.closeButton.imageView?.isHidden = true
         })
-        UIView.animate(withDuration: 0.5,
-                       delay: 0.3,
+        UIView.animate(withDuration: 0.3,
+                       delay: 0.1,
                        options: .curveEaseIn,
                        animations: { [weak self] in
             guard let self = self else { return }
@@ -141,21 +136,21 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
             self.backgroundView.isHidden = true
         })
     }
-    //
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemGray6
         setupTableView()
         setupMyCustomHeader()
-        setConstraints()
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
-//            guard let self = self else { return }
-//            print("Bukaki added")
-//            self.postList.append(camelPost)
-//        }
-
+        setupConstraints()
     }
+    
+    // MARK: - diploma work
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        profileTableView.reloadData()
+    }
+    //
 }
 
 extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
@@ -184,14 +179,48 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
             let post = postList[indexPath.row]
             cell2.titleLabel.text = "\(post.author). \(post.title)"
             cell2.newsImageView.image = UIImage(named: post.image)
-            cell2.descriptionLabel.text = post.description
+            cell2.newsImageView.sizeToFit()
             cell2.likesCountLabel.text = "Likes: \(post.likes)"
             cell2.viewsCountLabel.text = "Views: \(post.views)"
+            
+            // MARK: - diploma work
+            let tapLikes = LikesTapGesture(target: self, action: #selector(likesCountLabelClicked(_ :)))
+            tapLikes.indexPath = indexPath
+            cell2.likesCountLabel.addGestureRecognizer(tapLikes)
+            cell2.likesCountLabel.isUserInteractionEnabled = true
+            
+            let tapPostTitle = PostTapGesture(target: self, action: #selector(postClicked(_ :)))
+            tapPostTitle.indexPath = indexPath
+            cell2.titleLabel.addGestureRecognizer(tapPostTitle)
+            cell2.titleLabel.isUserInteractionEnabled = true
+            
+            let tapPostImageView = PostTapGesture(target: self, action: #selector(postClicked(_ :)))
+            tapPostImageView.indexPath = indexPath
+            cell2.newsImageView.addGestureRecognizer(tapPostImageView)
+            cell2.newsImageView.isUserInteractionEnabled = true
+            //
+            
             return cell2
         }
     }
 
-
+    // MARK: - diploma work
+    @objc func likesCountLabelClicked(_ sender: LikesTapGesture) {
+        guard let indexPath = sender.indexPath else { return }
+        postList[indexPath.row].likes += 1
+        profileTableView.reloadData()
+    }
+    
+    @objc func postClicked(_ sender: PostTapGesture) {
+        guard let indexPath = sender.indexPath else { return }
+        postList[indexPath.row].views += 1
+        let newsPostViewController = NewsPostViewController()
+        newsPostViewController.indexOfPostList = indexPath.row
+        navigationController?.pushViewController(newsPostViewController, animated: true)
+        profileTableView.reloadData()
+    }
+    //
+    
     // MARK: - Table view delegate
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -212,24 +241,22 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
+
             let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerID) as! MyCustomHeader
-            
-            // MARK: - new homework
             let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileImageViewClicked(_ :)))
-            tapRecognizer.numberOfTapsRequired = 1
-            tapRecognizer.numberOfTouchesRequired = 1
             tapRecognizer.delegate = self
             header.profileHeaderView.profileImageView.isUserInteractionEnabled = true
             header.profileHeaderView.profileImageView.addGestureRecognizer(tapRecognizer)
+            // MARK: - diploma work
+            header.profileHeaderView.delegate = self
             //
-
             return header
         } else {
             let header2 = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerID2) as! OneMoreCustomHeader
             return header2
         }
     }
-    
+        
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             let photosViewController = PhotosViewController()
@@ -237,3 +264,19 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
 }
+
+// MARK: - diploma work
+extension ProfileViewController: ProfileHeaderViewDelegate {
+    func profileHeaderViewDidTap(_ profileHeaderView: ProfileHeaderView) {
+        profileTableView.reloadData()
+    }
+}
+
+class LikesTapGesture: UITapGestureRecognizer {
+    var indexPath: IndexPath?
+}
+
+class PostTapGesture: UITapGestureRecognizer {
+    var indexPath: IndexPath?
+}
+//

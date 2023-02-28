@@ -18,11 +18,11 @@ class MyCustomHeader: UITableViewHeaderFooterView {
         contentView.addSubview(profileHeaderView)
         profileHeaderView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            profileHeaderView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            profileHeaderView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            profileHeaderView.widthAnchor.constraint(equalTo: contentView.widthAnchor),
-            profileHeaderView.heightAnchor.constraint(equalTo: contentView.heightAnchor),
-            profileHeaderView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: profileHeaderView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: profileHeaderView.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: profileHeaderView.widthAnchor),
+            contentView.heightAnchor.constraint(equalTo: profileHeaderView.heightAnchor),
+            contentView.topAnchor.constraint(equalTo: profileHeaderView.topAnchor),
         ])
     }
 }
