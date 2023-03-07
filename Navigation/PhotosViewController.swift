@@ -3,10 +3,12 @@ import UIKit
 
 class PhotosViewController: UIViewController, UINavigationBarDelegate, UIGestureRecognizerDelegate {
     
-    let photosCollectionViewCell = PhotosCollectionViewCell()
-    
+    // MARK: - diploma work
     lazy var chosenImageView = UIImageView()
+    lazy var openedImageView = UIImageView()
     
+    //
+
     let navigationBar = UINavigationBar(frame: .zero)
     
     private enum LayoutConstant {
@@ -38,11 +40,18 @@ class PhotosViewController: UIViewController, UINavigationBarDelegate, UIGesture
     private let photosCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.backgroundColor = .white
+        var scrollDetector = UISwipeGestureRecognizer(target: PhotosViewController.self, action: #selector(coordinatesChanger(_ :)))
+        collectionView.isUserInteractionEnabled = true
+        collectionView.addGestureRecognizer(scrollDetector)
         return collectionView
     }()
             
     @objc private func barButtonAction() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func coordinatesChanger(_ sender: UISwipeGestureRecognizer) {
+        
     }
     
     private func setupNavigationBar() {
@@ -99,52 +108,14 @@ class PhotosViewController: UIViewController, UINavigationBarDelegate, UIGesture
     func animateCloseButtonDisappear() {
         closeButton.tintColor = .clear
     }
-    func animatePhotoImageOpening() {
-        backgroundView.isHidden = false
-        backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.9)
-        let imageView = chosenImageView
-        imageView.translatesAutoresizingMaskIntoConstraints = true
-        imageView.frame = CGRect(x: backgroundView.bounds.minX,
-                                 y: backgroundView.bounds.midY - backgroundView.bounds.width/2,
-                                 width: backgroundView.bounds.width,
-                                 height: backgroundView.bounds.width)
-        imageView.layer.cornerRadius = 0
-        backgroundView.addSubview(imageView)
-    }
+    
     func animatePhotoImageClosing() {
         backgroundView.backgroundColor = .clear
-        let imageView = chosenImageView
-        imageView.translatesAutoresizingMaskIntoConstraints = true
-        imageView.frame = CGRect(x: backgroundView.bounds.minX,
-                                 y: backgroundView.bounds.midY - backgroundView.bounds.width/2,
-                                 width: backgroundView.bounds.width,
-                                 height: backgroundView.bounds.width)
-        imageView.layer.cornerRadius = 0
-        imageView.frame = CGRect(x: chosenImageView.frame.minX, y: chosenImageView.frame.minY, width: chosenImageView.frame.width, height: chosenImageView.frame.width)
-//        imageView.clipsToBounds = true
-        imageView.layer.borderWidth = 3
-        imageView.layer.borderColor = UIColor.white.cgColor
-    }
-
-    @objc func photoImageViewClicked(_ sender: UITapGestureRecognizer) {
-        setupBackgroundView()
-                
-        UIView.animate(withDuration: 0.9,
-                       delay: 0,
-                       options: .curveEaseIn,
-                       animations: {
-            self.animatePhotoImageOpening()
-        },
-                       completion: { finished in
-        })
-        UIView.animate(withDuration: 0.3,
-                       delay: 0.3,
-                       options: .curveEaseIn,
-                       animations: {
-            self.animateCloseButtonAppear()
-        },
-                       completion: { finished in
-        })
+        openedImageView.contentMode = .scaleAspectFill
+        openedImageView.clipsToBounds = true
+        openedImageView.layer.borderWidth = 0
+        openedImageView.frame = chosenImageView.frame
+        print("frame \(chosenImageView.frame)")
     }
     
     @objc func photoImageViewClosed() {
@@ -167,6 +138,7 @@ class PhotosViewController: UIViewController, UINavigationBarDelegate, UIGesture
         },
                        completion: { finished in
             self.backgroundView.isHidden = true
+            self.backgroundView.subviews.forEach { $0.removeFromSuperview() }
         })
     }
     //
@@ -178,6 +150,13 @@ class PhotosViewController: UIViewController, UINavigationBarDelegate, UIGesture
         setupConstraints()
         photosCollectionView.reloadData()
     }
+    
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(true)
+//        print("frame \(chosenImageView.frame)")
+//
+//    }
+
 }
 
 extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDelegate {
@@ -191,20 +170,60 @@ extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDele
         let photo = photos[indexPath.row]
         cell.photoImageView.image = UIImage(named: photo.imageName)
         cell.contentView.backgroundColor = .clear
-        chosenImageView = cell.photoImageView
         
-        let tapPhotoImageView = UITapGestureRecognizer(target: self, action: #selector(photoImageViewClicked(_ :)))
-        tapPhotoImageView.delegate = self
-        cell.photoImageView.addGestureRecognizer(tapPhotoImageView)
-        cell.photoImageView.isUserInteractionEnabled = true
-
         return cell
     }
     
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        chosenImageView
-//
-//    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // MARK: - diploma work
+        let frame = collectionView.convert(collectionView.cellForItem(at: indexPath)!.frame, to: backgroundView)
+//        let frame = collectionView.layoutAttributesForItem(at: indexPath)?.frame
+        chosenImageView.frame = frame
+        
+        let photo = photos[indexPath.row]
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: photo.imageName)
+        imageView.frame = frame
+        imageView.clipsToBounds = true
+
+        print(chosenImageView.frame)
+        print(frame)
+
+        func animatePhotoImageOpening() {
+            backgroundView.isHidden = false
+            backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.9)
+            imageView.contentMode = .scaleAspectFill
+            imageView.layer.borderWidth = 3
+            imageView.layer.borderColor = UIColor.white.cgColor
+            
+            imageView.translatesAutoresizingMaskIntoConstraints = true
+            imageView.frame = CGRect(x: backgroundView.bounds.minX,
+                                           y: backgroundView.bounds.midY - backgroundView.bounds.width/2,
+                                           width: backgroundView.bounds.width,
+                                           height: backgroundView.bounds.width)
+            openedImageView = imageView
+            backgroundView.addSubview(openedImageView)
+        }
+
+        setupBackgroundView()
+        UIView.animate(withDuration: 0.3,
+                       delay: 0,
+                       options: .curveEaseIn,
+                       animations: {
+            animatePhotoImageOpening()
+        },
+                       completion: { finished in
+        })
+        UIView.animate(withDuration: 0.3,
+                       delay: 0.3,
+                       options: .curveEaseIn,
+                       animations: {
+            self.animateCloseButtonAppear()
+        },
+                       completion: { finished in
+        })
+        //
+    }
     
 }
 

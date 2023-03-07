@@ -81,10 +81,6 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate {
     func animateProfileImageClosing() {
         backgroundView.backgroundColor = .clear
         let imageView = myCustomHeader.profileHeaderView.profileImageView
-        imageView.frame = CGRect(x: backgroundView.bounds.minX,
-                                 y: backgroundView.bounds.midY - backgroundView.bounds.width/2,
-                                 width: backgroundView.bounds.width,
-                                 height: backgroundView.bounds.width)
         imageView.layer.cornerRadius = 0
         imageView.frame = CGRect(x: 16, y: 16, width: 150, height: 150)
         imageView.layer.cornerRadius = imageView.frame.height/2
